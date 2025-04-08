@@ -2,10 +2,43 @@ import { useState, useEffect} from "react";
 const url = 'https://api.github.com/users';
 
 const FetchData = () => {
-  const [value, setValue] = useState('users');
+  const [users, setUser] = useState('users');
   useEffect(()=>{
-      console.log("hello there")
-  },[value])
-  return <h2>fetch data example</h2>;
+      const fetchData = async () => {
+
+        try {          
+          const respons = await fetch(url)
+          const users = await respons.json()
+          setUser(users)
+          console.log(users);
+        } catch (error) {
+          console.log(error)
+        }
+        
+      }
+
+      fetchData()
+
+  },[])
+
+   return (
+    <section>
+      <h3>github users</h3>
+      <ul className='users'>
+        {users.map((user) => {
+          const { id, login, avatar_url, html_url } = user;
+          return (
+            <li key={id}>
+              <img src={avatar_url} alt={login} />
+              <div>
+                <h5>{login}</h5>
+                <a href={html_url}>profile</a>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
 };
 export default FetchData;
